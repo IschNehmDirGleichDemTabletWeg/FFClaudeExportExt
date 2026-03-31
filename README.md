@@ -19,7 +19,7 @@ A Firefox extension to export chats from Claude.ai (and Open WebUI) as formatted
 
 ### Option A – Signed (permanent, recommended)
 
-Download the signed `.xpi` from the [Mozilla Add-ons page](https://addons.mozilla.org/firefox/addon/ffclaudeexportext/) and open it in Firefox.
+Download the signed `.xpi` from the releases section here and open it in Firefox.
 
 ### Option B – Temporary (developer mode)
 
