@@ -11,6 +11,7 @@ A Firefox extension to export chats from Claude.ai (and Open WebUI) as formatted
 - **Syntax Highlighting** – Code blocks retain their colors from Claude.ai
 - **Chat Layout** – User messages appear as bubbles (right-aligned), Claude responses on the left
 - **Decorative Dividers** – Classic letterhead-style ornament dividers between messages ( ✦ ✦ ✦ )
+- **Usage Bars** – Live display of Claude session (5h) and weekly (7d) usage limits directly in the popup
 - **Works on Claude.ai and localhost** (Open WebUI support in progress)
 
 ---
@@ -83,6 +84,7 @@ If the export shows "No chat messages found":
 - [x] PDF / Print support
 - [x] Syntax highlighting
 - [x] Mozilla signed release
+- [x] Usage bars (5h session + 7d weekly limit)
 - [ ] Open WebUI selectors
 - [ ] DOCX export (Phase 2)
 - [ ] Dark mode export theme

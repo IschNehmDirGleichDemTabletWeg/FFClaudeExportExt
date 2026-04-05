@@ -67,32 +67,78 @@
     #status.err { color: #c0392b; }
     .divider { border: none; border-top: 1px solid #eee; margin: 10px 0; }
     .footer { font-size: 10px; color: #bbb; text-align: center; margin-top: 4px; }
+    .usage-section { margin-top: 4px; }
+    .usage-label {
+      font-size: 10px;
+      color: #555;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+    .usage-bar-bg {
+      background: #eee;
+      border-radius: 4px;
+      height: 8px;
+      width: 100%;
+      margin-bottom: 2px;
+      overflow: hidden;
+    }
+    .usage-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: #a084d8;
+      transition: width 0.3s;
+    }
+    .usage-bar-fill.warn { background: #e67e22; }
+    .usage-bar-fill.crit { background: #c0392b; }
+    .usage-reset { font-size: 10px; color: #aaa; margin-bottom: 6px; }
   </style>
 </head>
 <body>
-  <h2>Chat Exporter</h2>
-  <div class="subtitle">Exportiere Chats als HTML oder zum Drucken</div>
-  <div id="site-badge" class="site-badge unknown">Seite wird erkannt...</div>
-
-  <button id="btn-print">
-    <span class="icon">&#128424;</span>
-    <span class="btn-label">
-      Drucken / PDF
-      <span class="btn-sub">Mehrseitig, optimiertes Layout</span>
-    </span>
-  </button>
+  <h2>Chat Exporter / Usage Checker</h2>
+  <div class="subtitle">Export your Chats as HTML oder print as PDF</div>
+  <div id="site-badge" class="site-badge unknown">Page being recognized...</div>
 
   <button id="btn-html">
     <span class="icon">&#128196;</span>
     <span class="btn-label">
-      Als HTML exportieren
-      <span class="btn-sub">Download + in OneNote importierbar</span>
+      Export as HTML
+      <span class="btn-sub">Download + import into OneNote</span>
+    </span>
+  </button>
+
+  <button id="btn-print">
+    <span class="icon">&#128424;</span>
+    <span class="btn-label">
+      Print / PDF
+      <span class="btn-sub">Multipaged, optiminized layout</span>
     </span>
   </button>
 
   <hr class="divider">
-  <div id="status">Bereit.</div>
-  <div class="footer">v1.0 &mdash; Chat Exporter</div>
+  <div class="usage-section" id="usage-section">
+    <div class="usage-label">
+      <span>Session (5h)</span>
+      <span id="usage-5h-pct">...</span>
+    </div>
+    <div class="usage-bar-bg">
+      <div class="usage-bar-fill" id="usage-5h-bar" style="width:0%"></div>
+    </div>
+    <div class="usage-reset" id="usage-5h-reset"></div>
+
+    <div class="usage-label">
+      <span>Week (7d)</span>
+      <span id="usage-7d-pct">...</span>
+    </div>
+    <div class="usage-bar-bg">
+      <div class="usage-bar-fill" id="usage-7d-bar" style="width:0%"></div>
+    </div>
+    <div class="usage-reset" id="usage-7d-reset"></div>
+  </div>
+
+  <hr class="divider">
+  <div id="status">Ready.</div>
+  <div class="footer">v1.2 &mdash; Chat Exporter & Usage Check</div>
 
   <script src="popup.js"></script>
 </body>

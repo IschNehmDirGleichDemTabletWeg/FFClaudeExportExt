@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Chat Exporter",
-  "version": "1.0.0",
-  "description": "Export chats from Claude.ai and Open WebUI as HTML or DOCX",
+  "version": "1.2.0",
+  "description": "Export chats from Claude.ai as HTML or Print as PDF",
   "author": "IschNehmDirGleichDemTabletWeg",
   "icons": {
     "48": "icons/icon48.png",
@@ -18,7 +18,9 @@
   },
   "permissions": [
     "activeTab",
-    "downloads"
+    "downloads",
+    "cookies",
+    "https://claude.ai/api/*"
   ],
   "content_scripts": [
     {

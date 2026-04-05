@@ -11,6 +11,12 @@
     return "unknown";
   }
 
+  function getChatTitle() {
+    var el = document.querySelector('[data-testid="chat-title-button"] div.truncate');
+    if (el && el.innerText.trim()) return el.innerText.trim();
+    return "";
+  }
+
   function extractClaude() {
     var messages = [];
     var allTurns = document.querySelectorAll(
@@ -156,7 +162,7 @@
       var data = getMessages();
       var html = buildHTML(data);
       if (!html) {
-        return Promise.resolve({ success: false, error: "Keine Chat-Nachrichten gefunden. Bist du auf einer Chat-Seite?" });
+        return Promise.resolve({ success: false, error: "No chat messages found. Are you on a chat page?" });
       }
       return Promise.resolve({ success: true, html: html, site: data.site, count: data.messages.length });
     }
@@ -175,7 +181,7 @@
       return Promise.resolve({ success: true });
     }
     if (request.action === "ping") {
-      return Promise.resolve({ ready: true, site: detectSite() });
+      return Promise.resolve({ ready: true, site: detectSite(), title: getChatTitle() });
     }
   });
 
