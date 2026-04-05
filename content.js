@@ -31,7 +31,15 @@
       clone.querySelectorAll("iframe, button, [role='button'], [class*='artifact'], [aria-label='Copy'], .flex.items-center.justify-between.bg-bg-300").forEach(function(el) { el.remove(); });
       var text = clone.innerText.trim();
       if (!text) return;
-      messages.push({ role: role, html: clone.innerHTML, text: text });
+      var timestamp = "";
+      if (isHuman) {
+        var container = turn.closest('.mb-1.mt-6.group');
+        var tsEl = container
+          ? container.querySelector('span.text-text-500.text-xs.flex.items-center.mr-2')
+          : null;
+        timestamp = tsEl ? tsEl.innerText.trim() : "";
+      }
+      messages.push({ role: role, html: clone.innerHTML, text: text, timestamp: timestamp });
     });
     return messages;
   }
@@ -71,7 +79,7 @@
       var roleClass = msg.role === "User" ? "user" : "assistant";
       if (idx > 0) body += divider;
       body += '<div class="message ' + roleClass + '">';
-      body += '<div class="role">' + msg.role + '</div>';
+      body += '<div class="role">' + (msg.timestamp ? '<span class="timestamp">' + msg.timestamp + '</span> ' : '') + msg.role + '</div>';
       body += '<div class="content">' + msg.html + '</div>';
       body += '</div>';
     });
@@ -110,6 +118,8 @@
       '.divider { width: 100%; margin: 1.5em 0; display: block; }\n' +
       '.role { font-size: 16pt; font-weight: bold; text-transform: uppercase;\n' +
       '        letter-spacing: 0.08em; margin-bottom: 8px; }\n' +
+      '.timestamp { font-size: 12pt; font-weight: normal; color: #1a1a1a;\n' +
+      '             letter-spacing: normal; text-transform: none; margin-right: 8px; }\n' +
       '.user { display: flex; flex-direction: column; align-items: flex-end; }\n' +
       '.user .role { color: #888; text-align: right; }\n' +
       '.user .content { background: #cccccc; color: #1a1a1a; border-radius: 18px 18px 4px 18px;\n' +
