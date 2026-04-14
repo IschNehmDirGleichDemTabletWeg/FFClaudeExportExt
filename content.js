@@ -21,7 +21,7 @@
     if (!isoString) return "";
     var d = new Date(isoString);
     var pad = function(n) { return n.toString().padStart(2, "0"); };
-    var time = pad(d.getHours()) + ":" + pad(d.getMinutes());
+    var time = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
     var date = pad(d.getDate()) + "." + pad(d.getMonth() + 1) + "." + d.getFullYear();
     return date + " | " + time;
   }
