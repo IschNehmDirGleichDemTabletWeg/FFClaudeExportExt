@@ -11,7 +11,7 @@ A Firefox extension to export chats from Claude.ai (and Open WebUI) as formatted
 - **Syntax Highlighting** – Code blocks retain their colors from Claude.ai
 - **Chat Layout** – User messages appear as bubbles (right-aligned), Claude responses on the left
 - **Decorative Dividers** – Classic letterhead-style ornament dividers between messages ( ✦ ✦ ✦ )
-- **Message Timestamps** – Each user message shows the time it was sent
+- **Message Timestamps** – Each user message shows the full date and time (incl. seconds) it was sent
 - **Usage Bars** – Live display of Claude session (5h) and weekly (7d) usage limits directly in the popup
 - **Works on Claude.ai and localhost** (Open WebUI support in progress)
 
@@ -63,7 +63,7 @@ FFClaudeExportExt/
 ## Known Limitations
 
 - **Claude.ai DOM selectors** may break if Claude.ai updates their CSS classes. If nothing is exported, check the browser console and update the selectors in `extractClaude()` in `content.js`.
-- **Timestamps** show time only (no date) — the full date is only available in Claude.ai's hover tooltip which is not permanently accessible in the DOM.
+- **Timestamps** – Full date and time (incl. seconds) are retrieved directly from the Claude.ai API.
 - **Open WebUI** support is not yet fully tested – selectors may need adjustment for your version.
 - **DOCX export** is planned for Phase 2.
 
@@ -87,7 +87,7 @@ If the export shows "No chat messages found":
 - [x] Syntax highlighting
 - [x] Mozilla signed release
 - [x] Usage bars (5h session + 7d weekly limit)
-- [x] Message timestamps (time only)
+- [x] Message timestamps (full date + time incl. seconds)
 - [ ] Open WebUI selectors
 - [ ] DOCX export (Phase 2)
 - [ ] Dark mode export theme
