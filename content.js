@@ -17,8 +17,50 @@
     return "";
   }
 
-  function extractClaude() {
+  function formatTimestamp(isoString) {
+    if (!isoString) return "";
+    var d = new Date(isoString);
+    var pad = function(n) { return n.toString().padStart(2, "0"); };
+    var time = pad(d.getHours()) + ":" + pad(d.getMinutes());
+    var date = pad(d.getDate()) + "." + pad(d.getMonth() + 1) + "." + d.getFullYear();
+    return date + " | " + time;
+  }
+
+  function fetchApiTimestamps() {
+    var chatId = window.location.pathname.split("/").pop();
+    var orgId = null;
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+      var c = cookies[i].trim();
+      if (c.startsWith("lastActiveOrg=")) {
+        orgId = c.substring("lastActiveOrg=".length);
+        break;
+      }
+    }
+    if (!orgId || !chatId) return Promise.resolve({});
+    return fetch("https://claude.ai/api/organizations/" + orgId + "/chat_conversations/" + chatId, {
+      credentials: "include"
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      // Build ordered list - skip empty messages (image-only uploads) as they don't appear in DOM
+      var tsList = [];
+      if (data.chat_messages && Array.isArray(data.chat_messages)) {
+        var sorted = data.chat_messages.slice().sort(function(a, b) { return a.index - b.index; });
+        sorted.forEach(function(msg) {
+          if (msg.text && msg.text.trim() !== "") {
+            tsList.push(formatTimestamp(msg.created_at));
+          }
+        });
+      }
+      return tsList;
+    })
+    .catch(function() { return []; });
+  }
+
+  function extractClaude(tsList) {
     var messages = [];
+    var msgIndex = 0;
     var allTurns = document.querySelectorAll(
       '[data-testid="user-message"], div.group div.contents'
     );
@@ -31,14 +73,8 @@
       clone.querySelectorAll("iframe, button, [role='button'], [class*='artifact'], [aria-label='Copy'], .flex.items-center.justify-between.bg-bg-300").forEach(function(el) { el.remove(); });
       var text = clone.innerText.trim();
       if (!text) return;
-      var timestamp = "";
-      if (isHuman) {
-        var container = turn.closest('.mb-1.mt-6.group');
-        var tsEl = container
-          ? container.querySelector('span.text-text-500.text-xs.flex.items-center.mr-2')
-          : null;
-        timestamp = tsEl ? tsEl.innerText.trim() : "";
-      }
+      var timestamp = tsList[msgIndex] || "";
+      msgIndex++;
       messages.push({ role: role, html: clone.innerHTML, text: text, timestamp: timestamp });
     });
     return messages;
@@ -46,7 +82,6 @@
 
   function extractOpenWebUI() {
     var messages = [];
-    // Open WebUI uses .message-container or chat-message divs
     var turns = document.querySelectorAll('.message, .chat-bubble, [class*="message-"]');
     turns.forEach(function(turn) {
       var role = "Unknown";
@@ -63,9 +98,9 @@
     return messages;
   }
 
-  function getMessages() {
+  function getMessages(tsList) {
     var site = detectSite();
-    if (site === "claude") return { site: "Claude.ai", messages: extractClaude() };
+    if (site === "claude") return { site: "Claude.ai", messages: extractClaude(tsList || []) };
     if (site === "openwebui") return { site: "Open WebUI", messages: extractOpenWebUI() };
     return { site: "Unknown", messages: [] };
   }
@@ -169,12 +204,14 @@
   // Listen for messages from popup.js
   browser.runtime.onMessage.addListener(function(request) {
     if (request.action === "exportHTML") {
-      var data = getMessages();
-      var html = buildHTML(data);
-      if (!html) {
-        return Promise.resolve({ success: false, error: "No chat messages found. Are you on a chat page?" });
-      }
-      return Promise.resolve({ success: true, html: html, site: data.site, count: data.messages.length });
+      return fetchApiTimestamps().then(function(tsList) {
+        var data = getMessages(tsList);
+        var html = buildHTML(data);
+        if (!html) {
+          return { success: false, error: "No chat messages found. Are you on a chat page?" };
+        }
+        return { success: true, html: html, site: data.site, count: data.messages.length };
+      });
     }
     if (request.action === "download") {
       var blob = new Blob([request.html], { type: "text/html;charset=utf-8" });
